@@ -24,7 +24,7 @@ function Btn({ children, className = "" }: { children: React.ReactNode; classNam
   );
 }
 
-function Index() {
+export default function Index() {
   return (
     <main className="font-sans text-[#1c2a23]" style={{ backgroundColor: SAGE }}>
       {/* NAV */}
