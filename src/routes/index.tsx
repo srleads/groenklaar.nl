@@ -1,4 +1,3 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { Check, ChevronDown, Zap, Leaf, Shield, Star } from "lucide-react";
 import hero from "@/assets/hero-installer.jpg";
 import driveway from "@/assets/lifestyle-driveway.jpg";
@@ -8,8 +7,6 @@ import house from "@/assets/house-render.jpg";
 import productsDark from "@/assets/products-dark.jpg";
 import appMockup from "@/assets/app-mockup.jpg";
 import family from "@/assets/process-family.jpg";
-
-export const Route = createFileRoute("/")({ component: Index });
 
 const SAGE = "#e6ebdb";
 const SAGE_DARK = "#d9e0c7";
