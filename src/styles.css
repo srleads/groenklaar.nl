@@ -144,6 +144,16 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: "Inter Tight", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .font-display {
+    font-family: "Fraunces", ui-serif, Georgia, "Times New Roman", serif;
+    font-optical-sizing: auto;
+    font-variation-settings: "opsz" 96;
+    letter-spacing: -0.02em;
   }
 }
 
@@ -162,12 +172,34 @@
     transform: translateY(0);
   }
 
+  .marquee-track {
+    animation: marquee 38s linear infinite;
+  }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.55; transform: scale(1.35); }
+  }
+
+  .pulse-dot {
+    animation: pulse-dot 1.8s ease-in-out infinite;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .reveal,
     .reveal.is-visible {
       opacity: 1;
       transform: none;
       transition: none;
+    }
+    .marquee-track,
+    .pulse-dot {
+      animation: none !important;
     }
   }
 }
