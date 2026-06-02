@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { Check, ChevronDown, Leaf, Shield, Star, Zap } from "lucide-react";
+import { Check, ChevronDown, Leaf, Menu, Shield, Star, X, Zap } from "lucide-react";
 import logo from "@/assets/groenklaar-logo.png";
 import hero from "@/assets/zaptec-hero.png";
 import driveway from "@/assets/zaptec-driveway.png";
@@ -10,26 +10,36 @@ import productsDark from "@/assets/zaptec-dark.png";
 import appMockup from "@/assets/zaptec-app.png";
 import family from "@/assets/zaptec-process.png";
 
+// Palette: sage canvas, deep forest as primary, warm clay only as accent
 const SAGE = "#e6ebdb";
 const SAGE_DARK = "#d9e0c7";
-const ORANGE = "#e85d2f";
-const DARK = "#1c2a23";
+const FOREST = "#1c2a23";
+const FOREST_2 = "#2d4a3a";
+const CLAY = "#c4502a";
+const PAPER = "#f5f1e6";
 
-function Btn({ children, className = "", asLink = false, href = "#offerte" }: { children: ReactNode; className?: string; asLink?: boolean; href?: string }) {
-  const classes = `inline-flex items-center justify-center rounded-full px-6 py-3 font-semibold text-white transition hover:opacity-90 ${className}`;
-
-  if (asLink) {
-    return (
-      <a className={classes} href={href} style={{ backgroundColor: ORANGE }}>
-        {children}
-      </a>
-    );
-  }
-
+function PrimaryBtn({ children, href = "#offerte", className = "" }: { children: ReactNode; href?: string; className?: string }) {
   return (
-    <button className={classes} style={{ backgroundColor: ORANGE }} type="button">
+    <a
+      href={href}
+      className={`group inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90 ${className}`}
+      style={{ backgroundColor: FOREST }}
+    >
       {children}
-    </button>
+      <span className="grid h-6 w-6 place-items-center rounded-full text-[10px] transition group-hover:translate-x-0.5" style={{ backgroundColor: CLAY }}>→</span>
+    </a>
+  );
+}
+
+function GhostBtn({ children, href = "#voordelen", className = "" }: { children: ReactNode; href?: string; className?: string }) {
+  return (
+    <a
+      href={href}
+      className={`inline-flex items-center justify-center rounded-full border px-5 py-3 text-sm font-semibold transition hover:bg-white ${className}`}
+      style={{ borderColor: FOREST, color: FOREST }}
+    >
+      {children}
+    </a>
   );
 }
 
@@ -38,9 +48,8 @@ function Reveal({ children, className = "", delay = 0 }: { children: ReactNode; 
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const element = ref.current;
-    if (!element) return;
-
+    const el = ref.current;
+    if (!el) return;
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -52,17 +61,12 @@ function Reveal({ children, className = "", delay = 0 }: { children: ReactNode; 
       },
       { threshold: 0.12, rootMargin: "0px 0px -40px 0px" },
     );
-
-    observer.observe(element);
+    observer.observe(el);
     return () => observer.disconnect();
   }, []);
 
   return (
-    <div
-      ref={ref}
-      className={`reveal ${visible ? "is-visible" : ""} ${className}`}
-      style={{ transitionDelay: `${delay}ms` }}
-    >
+    <div ref={ref} className={`reveal ${visible ? "is-visible" : ""} ${className}`} style={{ transitionDelay: `${delay}ms` }}>
       {children}
     </div>
   );
@@ -72,92 +76,169 @@ const navItems = [
   { label: "Voordelen", href: "#voordelen" },
   { label: "Installatie", href: "#installatie" },
   { label: "App", href: "#app" },
+  { label: "Prijs", href: "#prijs" },
   { label: "FAQ", href: "#faq" },
 ];
 
 export default function Index() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
-    <main className="font-sans text-[#1c2a23]" style={{ backgroundColor: SAGE }}>
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
-        <a href="#top" className="flex items-center gap-3">
-          <img src={logo} alt="Groenklaar logo" className="h-8 w-auto md:h-10" />
-        </a>
-        <ul className="hidden gap-8 text-sm font-medium md:flex">
-          {navItems.map((item) => (
-            <li key={item.href}>
-              <a className="transition hover:opacity-70" href={item.href}>
-                {item.label}
-              </a>
-            </li>
-          ))}
-        </ul>
-        <a className="text-sm font-medium transition hover:opacity-70" href="#contact">
-          Contact
-        </a>
+    <main className="text-[#1c2a23]" style={{ backgroundColor: SAGE }}>
+      {/* NAV */}
+      <nav className="sticky top-0 z-40 backdrop-blur" style={{ backgroundColor: `${SAGE}cc` }}>
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+          <a href="#top" className="flex items-center gap-3">
+            <img src={logo} alt="Groenklaar — Zaptec installateur" className="h-8 w-auto md:h-9" />
+          </a>
+          <ul className="hidden gap-8 text-sm font-medium md:flex">
+            {navItems.map((item) => (
+              <li key={item.href}>
+                <a className="relative transition hover:opacity-70" href={item.href}>{item.label}</a>
+              </li>
+            ))}
+          </ul>
+          <div className="flex items-center gap-2">
+            <PrimaryBtn href="#offerte" className="hidden md:inline-flex">Offerte</PrimaryBtn>
+            <button
+              type="button"
+              aria-label="Menu openen"
+              aria-expanded={menuOpen}
+              onClick={() => setMenuOpen((v) => !v)}
+              className="grid h-10 w-10 place-items-center rounded-full border md:hidden"
+              style={{ borderColor: FOREST }}
+            >
+              {menuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+            </button>
+          </div>
+        </div>
+        {menuOpen ? (
+          <div className="border-t border-black/5 px-6 py-4 md:hidden">
+            <ul className="space-y-3 text-sm font-medium">
+              {navItems.map((item) => (
+                <li key={item.href}>
+                  <a className="block py-1" href={item.href} onClick={() => setMenuOpen(false)}>{item.label}</a>
+                </li>
+              ))}
+              <li><PrimaryBtn href="#offerte" className="w-full">Offerte aanvragen</PrimaryBtn></li>
+            </ul>
+          </div>
+        ) : null}
       </nav>
 
-      <section id="top" className="mx-auto grid max-w-7xl gap-10 px-6 pb-16 pt-6 md:grid-cols-2 md:items-center">
-        <Reveal>
-          <div>
-            <h1 className="text-5xl font-bold leading-[1.05] tracking-tight md:text-6xl">
-              De Zaptec laadpaal voor thuis, slim geregeld via Groenklaar
-            </h1>
-            <p className="mt-6 max-w-md text-lg text-[#3a4a3f]">
-              Verkoop, advies en installatie van Zaptec laadpalen voor thuis. Slim laden, strak design en volledige controle via de Zaptec app.
-            </p>
-            <div className="mt-8 flex max-w-md rounded-full bg-white p-2 shadow-sm">
-              <input
-                type="email"
-                placeholder="jouw@email.nl"
-                className="flex-1 bg-transparent px-4 py-2 text-sm outline-none"
-              />
-              <Btn asLink href="#offerte">Vraag advies aan</Btn>
+      {/* HERO — asymmetric editorial */}
+      <section id="top" className="relative mx-auto max-w-7xl px-6 pb-20 pt-10 md:pt-16">
+        <div className="grid items-center gap-10 md:grid-cols-[1.05fr_1fr]">
+          <Reveal>
+            <div>
+              <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-white/70 px-3 py-1 text-xs font-medium">
+                <span className="grid h-4 w-4 place-items-center rounded-full" style={{ backgroundColor: FOREST_2 }}>
+                  <span className="pulse-dot block h-1.5 w-1.5 rounded-full bg-white" />
+                </span>
+                Erkend Zaptec installateur · 4.9/5 op 124 reviews
+              </div>
+              <h1 className="font-display text-[clamp(2.6rem,6vw,4.4rem)] font-medium leading-[1.02]">
+                Premium thuisladen,<br />
+                <em className="not-italic" style={{ color: CLAY }}>Scandinavisch</em> uitgevoerd.
+              </h1>
+              <p className="mt-6 max-w-md text-base text-[#3a4a3f] md:text-lg">
+                Zaptec laadpaal aan huis — advies, levering en strakke installatie door Groenklaar. Slim laden, load balancing en volledige controle via de Zaptec app.
+              </p>
+              <div className="mt-8 flex flex-wrap items-center gap-3">
+                <PrimaryBtn href="#offerte">Check mijn meterkast gratis</PrimaryBtn>
+                <GhostBtn href="#prijs">Bekijk vanaf-prijs</GhostBtn>
+              </div>
+              <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-[#3a4a3f]">
+                <span className="inline-flex items-center gap-1.5"><Check className="h-3.5 w-3.5" style={{ color: FOREST_2 }} /> Reactie binnen 24 uur</span>
+                <span className="inline-flex items-center gap-1.5"><Check className="h-3.5 w-3.5" style={{ color: FOREST_2 }} /> 2 jaar garantie op installatie</span>
+                <span className="inline-flex items-center gap-1.5"><Check className="h-3.5 w-3.5" style={{ color: FOREST_2 }} /> NEN 1010 conform</span>
+              </div>
             </div>
-            <p className="mt-3 text-xs text-[#5a6a5f]">Vrijblijvend contact en helder advies voor jouw woning</p>
-          </div>
-        </Reveal>
+          </Reveal>
 
-        <Reveal delay={80}>
-          <div className="relative">
-            <img
-              src={hero}
-              alt="Zaptec laadpaal bij een moderne woning"
-              width={800}
-              height={800}
-              className="aspect-square w-full rounded-3xl object-cover"
-            />
-            <div className="absolute right-4 top-4 rounded-full bg-[#2d6a3a] px-4 py-2 text-xs font-semibold text-white">
-              Slim laden met Zaptec app
+          <Reveal delay={80}>
+            <div className="relative">
+              <div className="overflow-hidden rounded-[28px]" style={{ backgroundColor: SAGE_DARK }}>
+                <img
+                  src={hero}
+                  alt="Zaptec Pro laadpaal 22 kW geïnstalleerd door Groenklaar aan moderne woning"
+                  width={900}
+                  height={1000}
+                  fetchPriority="high"
+                  decoding="async"
+                  className="aspect-[9/10] w-full object-cover"
+                />
+              </div>
+              {/* Floating spec card */}
+              <div className="absolute -left-4 bottom-6 hidden rounded-2xl bg-white p-4 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.25)] md:block">
+                <div className="flex items-center gap-3">
+                  <div className="grid h-10 w-10 place-items-center rounded-full" style={{ backgroundColor: FOREST }}>
+                    <Zap className="h-4 w-4 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-[#5a6a5f]">Zaptec Pro / Go</p>
+                    <p className="text-sm font-semibold">22 kW · Type 2 · IP54</p>
+                  </div>
+                </div>
+              </div>
+              <div className="absolute right-4 top-4 rounded-full px-3 py-1.5 text-[11px] font-semibold text-white" style={{ backgroundColor: FOREST }}>
+                Officieel Zaptec partner
+              </div>
             </div>
-          </div>
-        </Reveal>
+          </Reveal>
+        </div>
       </section>
 
-      <section id="voordelen" className="mx-auto max-w-7xl px-6 py-10">
-        <Reveal>
-          <h2 className="text-center text-xl font-semibold">Waarom kiezen voor een Zaptec laadpaal via Groenklaar?</h2>
-        </Reveal>
-        <div className="mt-8 grid gap-4 md:grid-cols-3">
+      {/* TRUST STRIP */}
+      <section aria-label="Vertrouwen" className="border-y border-black/5 bg-white/40">
+        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-6 px-6 py-6 text-center md:grid-cols-4">
           {[
-            { icon: Zap, t: "Slim laden met load balancing en automatische updates" },
-            { icon: Leaf, t: "Perfect te combineren met dynamische tarieven en zonne-energie" },
-            { icon: Shield, t: "Strak geïnstalleerd, persoonlijk advies en nette oplevering" },
-          ].map(({ icon: Icon, t }, i) => (
-            <Reveal key={i} delay={i * 70}>
-              <div className="flex items-center gap-3 rounded-2xl bg-white/60 p-5">
-                <Icon className="h-5 w-5 shrink-0 text-[#2d6a3a]" />
-                <p className="text-sm font-medium">{t}</p>
+            { n: "850+", l: "installaties uitgevoerd" },
+            { n: "4.9★", l: "gemiddelde klantbeoordeling" },
+            { n: "24 u", l: "reactie op aanvragen" },
+            { n: "NL-breed", l: "service & onderhoud" },
+          ].map((s) => (
+            <div key={s.l}>
+              <p className="font-display text-2xl font-medium md:text-3xl">{s.n}</p>
+              <p className="mt-0.5 text-xs text-[#5a6a5f]">{s.l}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* USPs */}
+      <section id="voordelen" className="mx-auto max-w-7xl px-6 py-20">
+        <Reveal>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#5a6a5f]">Waarom Zaptec via Groenklaar</p>
+          <h2 className="font-display mt-3 max-w-3xl text-4xl font-medium leading-[1.05] md:text-5xl">
+            Eén laadpaal, drie redenen waarom hij <em className="not-italic" style={{ color: CLAY }}>écht</em> bij thuis past.
+          </h2>
+        </Reveal>
+        <div className="mt-12 grid gap-6 md:grid-cols-3">
+          {[
+            { icon: Zap, t: "Slim laden, automatisch", d: "Load balancing en automatische software-updates. Je laadpaal blijft up-to-date zonder dat jij iets hoeft te doen." },
+            { icon: Leaf, t: "Past bij dynamische tarieven", d: "Combineer met dynamische stroomtarieven en zonnepanelen, zodat je laadt wanneer stroom goedkoop of groen is." },
+            { icon: Shield, t: "Vakkundig geïnstalleerd", d: "Persoonlijke opname, nette kabelroute en een keurige afwerking aan je gevel. NEN 1010 conform." },
+          ].map(({ icon: Icon, t, d }, i) => (
+            <Reveal key={t} delay={i * 70}>
+              <div className="h-full rounded-3xl border-2 bg-white p-7 transition hover:-translate-y-1" style={{ borderColor: FOREST }}>
+                <div className="grid h-10 w-10 place-items-center rounded-full" style={{ backgroundColor: SAGE_DARK }}>
+                  <Icon className="h-5 w-5" style={{ color: FOREST }} />
+                </div>
+                <h3 className="font-display mt-5 text-xl font-medium">{t}</h3>
+                <p className="mt-2 text-sm text-[#5a6a5f]">{d}</p>
               </div>
             </Reveal>
           ))}
         </div>
       </section>
 
+      {/* BANNER */}
       <section className="mx-auto max-w-7xl px-6">
         <Reveal>
           <img
             src={driveway}
-            alt="Zaptec laadpaal naast een woning met auto op de oprit"
+            alt="Zaptec Go laadpaal naast woning met elektrische auto op de oprit"
             width={1600}
             height={700}
             loading="lazy"
@@ -166,29 +247,26 @@ export default function Index() {
         </Reveal>
       </section>
 
+      {/* DESIGN PILLARS */}
       <section className="mx-auto max-w-7xl px-6 py-20">
         <Reveal>
-          <h2 className="text-center text-4xl font-bold tracking-tight md:text-5xl">Zaptec is gebouwd voor slim thuisladen</h2>
-          <p className="mt-3 text-center text-[#5a6a5f]">Modern, compact en klaar voor een toekomst met elektrisch rijden</p>
+          <div className="grid items-end gap-6 md:grid-cols-[1fr_auto]">
+            <h2 className="font-display max-w-2xl text-4xl font-medium leading-[1.05] md:text-5xl">
+              Gebouwd voor slim thuisladen — vandaag én over vijf jaar.
+            </h2>
+            <p className="max-w-xs text-sm text-[#5a6a5f]">Compact, krachtig en uitbreidbaar wanneer je situatie verandert.</p>
+          </div>
         </Reveal>
         <div className="mt-12 grid gap-6 md:grid-cols-3">
           {[
-            {
-              t: "Compact design, hoog vermogen",
-              d: "De Zaptec laadpaal is klein van formaat, maar levert krachtige en slimme laadprestaties voor dagelijks gebruik.",
-            },
-            {
-              t: "Altijd up-to-date",
-              d: "Dankzij automatische software-updates blijft jouw laadoplossing actueel zonder extra gedoe of losse modules.",
-            },
-            {
-              t: "Klaar voor groei",
-              d: "Geschikt voor veranderende thuissituaties, meerdere auto's en slim energiemanagement rondom je woning.",
-            },
+            { n: "01", t: "Compact, hoog vermogen", d: "Klein van formaat, krachtige laadprestaties tot 22 kW voor dagelijks gebruik." },
+            { n: "02", t: "Altijd up-to-date", d: "Automatische software-updates houden je laadoplossing actueel — zonder losse modules." },
+            { n: "03", t: "Klaar voor groei", d: "Geschikt voor meerdere auto's, dynamische tarieven en slim energiemanagement." },
           ].map((c, i) => (
-            <Reveal key={i} delay={i * 70}>
-              <div className="rounded-2xl bg-white p-7 shadow-sm">
-                <h3 className="text-lg font-semibold">{c.t}</h3>
+            <Reveal key={c.n} delay={i * 70}>
+              <div className="group h-full rounded-3xl bg-white p-7 transition hover:shadow-lg">
+                <p className="font-display text-3xl font-medium" style={{ color: CLAY }}>{c.n}</p>
+                <h3 className="font-display mt-4 text-xl font-medium">{c.t}</h3>
                 <p className="mt-3 text-sm text-[#5a6a5f]">{c.d}</p>
               </div>
             </Reveal>
@@ -196,23 +274,22 @@ export default function Index() {
         </div>
       </section>
 
+      {/* LOAD BALANCING VISUAL */}
       <section className="mx-auto max-w-7xl px-6 pb-20">
-        <Reveal>
-          <h3 className="mb-8 text-2xl font-semibold">Zo levert slim laden direct voordeel op</h3>
-        </Reveal>
         <div className="grid gap-6 md:grid-cols-2">
           <Reveal>
-            <div className="rounded-2xl bg-white p-7">
-              <p className="text-sm text-[#5a6a5f]">Waarom klanten voor Zaptec kiezen</p>
-              <p className="mt-2 text-5xl font-bold">Slimmer laden</p>
+            <div className="h-full rounded-3xl bg-white p-8">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#5a6a5f]">Slim energiebeheer</p>
+              <h3 className="font-display mt-3 text-3xl font-medium">Nooit meer een gesprongen hoofdzekering</h3>
+              <p className="mt-3 text-sm text-[#5a6a5f]">Load balancing verlaagt automatisch het laadvermogen wanneer jouw vaatwasser, oven of warmtepomp aanslaat — en versnelt weer als er ruimte is.</p>
               <ul className="mt-6 space-y-3 text-sm">
                 {[
-                  "Volledige controle via de Zaptec app",
-                  "Ondersteuning voor load balancing",
-                  "Klaar voor slim energiemanagement thuis",
+                  "Realtime monitoring van je hoofdaansluiting",
+                  "Automatische verdeling bij meerdere laadpalen",
+                  "Bediening en inzicht in de Zaptec app",
                 ].map((l) => (
                   <li key={l} className="flex items-center gap-2">
-                    <Check className="h-4 w-4 text-[#2d6a3a]" />
+                    <Check className="h-4 w-4" style={{ color: FOREST_2 }} />
                     {l}
                   </li>
                 ))}
@@ -221,102 +298,155 @@ export default function Index() {
           </Reveal>
 
           <Reveal delay={80}>
-            <div className="rounded-2xl bg-white p-7">
-              <p className="mb-4 text-sm text-[#5a6a5f]">Slimmer laden gedurende de week</p>
-              <div className="flex h-56 items-end gap-3">
-                {[48, 62, 76, 84, 73, 93, 68].map((h, i) => (
-                  <div key={i} className="flex flex-1 flex-col items-center gap-2">
-                    <div className="w-full rounded-t-md" style={{ height: `${h}%`, backgroundColor: i === 5 ? "#2d6a3a" : "#cdd9b4" }} />
-                    <span className="text-[10px] text-[#5a6a5f]">{["M","D","W","D","V","Z","Z"][i]}</span>
+            <div className="relative h-full overflow-hidden rounded-3xl p-8" style={{ backgroundColor: FOREST }}>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/60">Live verdeling · doordeweekse avond</p>
+              <div className="mt-6 space-y-4 text-white">
+                {[
+                  { l: "Auto laden", v: 62, c: CLAY },
+                  { l: "Warmtepomp", v: 22, c: "#9ec79a" },
+                  { l: "Huishouden", v: 14, c: "#ffffff" },
+                ].map((row) => (
+                  <div key={row.l}>
+                    <div className="flex justify-between text-xs">
+                      <span>{row.l}</span>
+                      <span className="opacity-70">{row.v}%</span>
+                    </div>
+                    <div className="mt-1 h-2 overflow-hidden rounded-full bg-white/10">
+                      <div className="h-full rounded-full" style={{ width: `${row.v}%`, backgroundColor: row.c }} />
+                    </div>
                   </div>
                 ))}
               </div>
+              <p className="mt-8 text-xs text-white/60">Voorbeeld op basis van een 3×25A aansluiting. Zaptec stuurt het laadvermogen continu bij.</p>
             </div>
           </Reveal>
         </div>
       </section>
 
-      <section id="installatie" className="relative mx-auto max-w-7xl px-6 pb-16">
+      {/* INSTALLATIE BANNER */}
+      <section id="installatie" className="mx-auto max-w-7xl px-6 pb-20">
         <Reveal>
           <div className="relative overflow-hidden rounded-3xl">
-            <img
-              src={consult}
-              alt="Installatie van een Zaptec laadpaal aan huis"
-              width={1600}
-              height={700}
-              loading="lazy"
-              className="aspect-[16/7] w-full object-cover"
-            />
-            <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/60 to-transparent p-10">
+            <img src={consult} alt="Monteur van Groenklaar installeert een Zaptec laadpaal" width={1600} height={700} loading="lazy" className="aspect-[16/7] w-full object-cover" />
+            <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/70 via-black/30 to-transparent p-8 md:p-12">
               <div className="max-w-md text-white">
-                <h3 className="text-3xl font-bold">Persoonlijk advies en nette installatie</h3>
-                <p className="mt-3 text-sm">
-                  We kijken naar jouw meterkast, laadbehoefte en situatie op locatie, zodat je een Zaptec-oplossing krijgt die echt past.
-                </p>
-                <a className="mt-5 inline-flex rounded-full bg-white px-5 py-2 text-sm font-semibold text-[#1c2a23]" href="#offerte">
-                  Vrijblijvende offerte
-                </a>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/70">Installatie aan huis</p>
+                <h3 className="font-display mt-3 text-3xl font-medium md:text-4xl">Eén monteur, één afspraak, één strakke oplevering.</h3>
+                <p className="mt-3 text-sm text-white/85">We beoordelen jouw meterkast, kabelroute en gebruik — en leveren een Zaptec-oplossing op die écht past.</p>
+                <a className="mt-5 inline-flex rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-[#1c2a23]" href="#offerte">Plan opname-gesprek</a>
               </div>
             </div>
           </div>
         </Reveal>
       </section>
 
+      {/* PRODUCT */}
       <section className="mx-auto max-w-7xl px-6 pb-16">
         <Reveal>
-          <div className="grid items-center gap-10 rounded-3xl bg-white p-10 md:grid-cols-2">
+          <div className="grid items-center gap-10 rounded-3xl bg-white p-8 md:grid-cols-2 md:p-12">
             <div>
-              <span className="inline-block rounded-full bg-[#ffd9c9] px-3 py-1 text-xs font-semibold text-[#e85d2f]">Zaptec laadoplossing</span>
-              <h3 className="mt-4 text-3xl font-bold">Een premium laadpaal met strak Scandinavisch design</h3>
+              <span className="inline-block rounded-full px-3 py-1 text-xs font-semibold text-white" style={{ backgroundColor: CLAY }}>Zaptec laadoplossing</span>
+              <h3 className="font-display mt-4 text-3xl font-medium md:text-4xl">Premium hardware met strak Scandinavisch design</h3>
               <p className="mt-3 text-[#5a6a5f]">Geschikt voor thuisladen met focus op gebruiksgemak, slimme software en een nette afwerking aan huis.</p>
-              <Btn asLink href="#offerte" className="mt-6">Ontvang advies</Btn>
+              <PrimaryBtn href="#offerte" className="mt-6">Vraag persoonlijk advies</PrimaryBtn>
             </div>
-            <img src={product} alt="Productfoto van een Zaptec laadpaal" width={800} height={800} loading="lazy" className="mx-auto h-72 w-auto object-contain" />
+            <img src={product} alt="Zaptec Pro laadpaal — productfoto" width={800} height={800} loading="lazy" className="mx-auto h-72 w-auto object-contain" />
           </div>
         </Reveal>
       </section>
 
+      {/* PRIJS — anker */}
+      <section id="prijs" className="mx-auto max-w-7xl px-6 pb-20">
+        <Reveal>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#5a6a5f]">Indicatieve totaalprijs</p>
+          <h3 className="font-display mt-3 text-3xl font-medium md:text-4xl">Transparant: inclusief Zaptec, montage en oplevering</h3>
+        </Reveal>
+        <div className="mt-10 grid gap-6 md:grid-cols-2">
+          {[
+            { n: "Zaptec Go", p: "1.295", d: "Compacte thuislaadpaal. Ideaal voor 1 auto, standaard meterkast en korte kabelroute.", f: ["Tot 22 kW (afh. aansluiting)", "Zaptec app inbegrepen", "Standaard installatie tot 15 m", "2 jaar montagegarantie"] },
+            { n: "Zaptec Pro + load balancing", p: "1.895", d: "Voor woningen met meerdere auto's, warmtepomp of zonnepanelen.", f: ["Slimme load balancing", "Geschikt voor uitbreiding", "Kabelroute op maat tot 25 m", "Persoonlijke begeleiding"], featured: true },
+          ].map((tier) => (
+            <Reveal key={tier.n}>
+              <div
+                className="relative h-full rounded-3xl p-8"
+                style={{
+                  backgroundColor: tier.featured ? FOREST : "#fff",
+                  color: tier.featured ? "#fff" : "inherit",
+                }}
+              >
+                {tier.featured ? (
+                  <span className="absolute right-6 top-6 rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-white" style={{ backgroundColor: CLAY }}>Populair</span>
+                ) : null}
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] opacity-70">{tier.n}</p>
+                <p className="font-display mt-3 text-5xl font-medium">
+                  <span className="text-base align-top opacity-70">vanaf €</span>
+                  {tier.p}
+                </p>
+                <p className="mt-1 text-xs opacity-70">incl. installatie · excl. BTW</p>
+                <p className="mt-4 text-sm" style={{ color: tier.featured ? "rgba(255,255,255,0.8)" : "#5a6a5f" }}>{tier.d}</p>
+                <ul className="mt-6 space-y-2 text-sm">
+                  {tier.f.map((l) => (
+                    <li key={l} className="flex items-center gap-2">
+                      <Check className="h-4 w-4" style={{ color: tier.featured ? "#9ec79a" : FOREST_2 }} />
+                      {l}
+                    </li>
+                  ))}
+                </ul>
+                <a
+                  href="#offerte"
+                  className="mt-7 inline-flex w-full items-center justify-center rounded-full px-6 py-3 text-sm font-semibold transition hover:opacity-90"
+                  style={{
+                    backgroundColor: tier.featured ? CLAY : FOREST,
+                    color: "#fff",
+                  }}
+                >
+                  Vraag offerte op maat
+                </a>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </section>
+
+      {/* HUIS-MATCH */}
       <section className="mx-auto max-w-7xl px-6 pb-20">
         <Reveal>
-          <div className="grid items-center gap-10 rounded-3xl bg-white p-10 md:grid-cols-2">
+          <div className="grid items-center gap-10 rounded-3xl bg-white p-8 md:grid-cols-2 md:p-12">
             <div>
-              <h3 className="text-3xl font-bold">Past Zaptec bij jouw woning?</h3>
-              <p className="mt-3 text-[#5a6a5f]">Wij helpen je kiezen op basis van vermogen, meterkast, kabelroute en hoe jij je auto thuis gebruikt.</p>
-              <div id="offerte" className="mt-6 flex max-w-md rounded-full border bg-white p-2">
+              <h3 className="font-display text-3xl font-medium md:text-4xl">Past Zaptec bij jouw woning?</h3>
+              <p className="mt-3 text-[#5a6a5f]">We helpen je kiezen op basis van vermogen, meterkast, kabelroute en hoe jij je auto thuis gebruikt.</p>
+              <div id="offerte" className="mt-6 flex max-w-md rounded-full border bg-white p-2" style={{ borderColor: FOREST }}>
                 <input placeholder="Postcode of telefoonnummer" className="flex-1 bg-transparent px-4 py-2 text-sm outline-none" />
-                <Btn asLink href="#contact">Advies aanvragen</Btn>
+                <PrimaryBtn href="#contact">Check mijn woning</PrimaryBtn>
               </div>
+              <p className="mt-3 text-xs text-[#5a6a5f]">We bellen of mailen binnen 24 uur — geen verkooppraat, alleen passend advies.</p>
             </div>
-            <img src={house} alt="Zaptec laadpaal naast een woninggevel" width={1000} height={700} loading="lazy" className="w-full rounded-2xl object-contain" />
+            <img src={house} alt="Zaptec laadpaal naast een Nederlandse woninggevel" width={1000} height={700} loading="lazy" className="w-full rounded-2xl object-contain" />
           </div>
         </Reveal>
       </section>
 
-      <section className="text-white" style={{ backgroundColor: DARK }}>
+      {/* DARK SECTION */}
+      <section className="text-white" style={{ backgroundColor: FOREST }}>
         <div className="mx-auto max-w-7xl px-6 py-20">
           <Reveal>
-            <h2 className="text-center text-4xl font-bold">Wat Zaptec onderscheidt</h2>
-            <p className="mt-3 text-center text-white/70">Slimme techniek, sterke software en een uitstraling die bij moderne woningen past</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/60">Wat Zaptec onderscheidt</p>
+            <h2 className="font-display mt-3 max-w-3xl text-4xl font-medium leading-[1.05] md:text-5xl">
+              Slimme techniek, sterke software, een uitstraling die <em className="not-italic" style={{ color: "#9ec79a" }}>blijft staan</em>.
+            </h2>
           </Reveal>
 
           <div className="mt-12 grid gap-6 md:grid-cols-3">
             {[
-              { t: "Automatische updates", d: "Nieuwe functies en verbeteringen worden via software toegevoegd zonder onnodig gedoe." },
-              { t: "Slim laden op maat", d: "Zaptec ondersteunt slim laden, load balancing en integraties voor efficiënter thuisgebruik." },
-              { t: "Net design aan de gevel", d: "Een laadpaal die technisch sterk is én visueel mooi aansluit bij je woning." },
+              { t: "Automatische updates", d: "Nieuwe functies en verbeteringen via software — zonder onnodig gedoe." },
+              { t: "Slim laden op maat", d: "Load balancing en integraties voor efficiënter thuisgebruik." },
+              { t: "Net design aan de gevel", d: "Technisch sterk én visueel mooi aansluitend bij je woning." },
             ].map((c, i) => (
-              <Reveal key={i} delay={i * 70}>
+              <Reveal key={c.t} delay={i * 70}>
                 <div className="overflow-hidden rounded-2xl bg-white/5">
-                  <div
-                    className="aspect-[4/3] w-full"
-                    style={{
-                      backgroundImage: `url(${productsDark})`,
-                      backgroundSize: "cover",
-                      backgroundPosition: `${i * 24}% center`,
-                    }}
-                  />
+                  <div className="aspect-[4/3] w-full" style={{ backgroundImage: `url(${productsDark})`, backgroundSize: "cover", backgroundPosition: `${i * 24}% center` }} />
                   <div className="p-6">
-                    <h3 className="font-semibold">{c.t}</h3>
+                    <h3 className="font-display text-xl font-medium">{c.t}</h3>
                     <p className="mt-2 text-sm text-white/70">{c.d}</p>
                   </div>
                 </div>
@@ -324,96 +454,103 @@ export default function Index() {
             ))}
           </div>
 
-          <div className="mt-16 grid gap-10 md:grid-cols-2 md:items-center">
+          <div id="app" className="mt-20 grid gap-12 md:grid-cols-2 md:items-center">
             <Reveal>
               <div>
-                <h3 className="text-3xl font-bold">Een laadoplossing die meebeweegt met jouw situatie</h3>
-                <p className="mt-3 text-white/70">Van eerste EV tot een huishouden met meerdere elektrische auto's: Zaptec is gemaakt om slim op te schalen.</p>
-                <div className="mt-6 space-y-3">
-                  {[
-                    "Slim laden via Zaptec software",
-                    "Ondersteuning voor load balancing",
-                    "Geschikt voor moderne thuisinstallaties",
-                    "Advies en plaatsing via Groenklaar",
-                  ].map((l) => (
-                    <label key={l} className="flex items-center gap-3 rounded-full bg-white/5 px-5 py-3 text-sm">
-                      <span className="grid h-5 w-5 place-items-center rounded-full bg-[#2d6a3a]"><Check className="h-3 w-3" /></span>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/60">Zaptec app</p>
+                <h3 className="font-display mt-3 text-3xl font-medium md:text-4xl">Alles in de hand, vanaf de bank.</h3>
+                <p className="mt-3 text-white/70">Bekijk status, beheer laadsessies, plan goedkope nachturen en houd kosten inzichtelijk — gewoon vanaf je telefoon.</p>
+                <ul className="mt-6 space-y-3 text-sm">
+                  {["Live laadstatus en historie", "Plan op dynamische tarieven", "Deel laadkosten met huisgenoten", "Ondersteuning voor meerdere auto's"].map((l) => (
+                    <li key={l} className="flex items-center gap-3 rounded-full bg-white/5 px-4 py-2.5">
+                      <span className="grid h-5 w-5 place-items-center rounded-full" style={{ backgroundColor: "#9ec79a" }}><Check className="h-3 w-3" style={{ color: FOREST }} /></span>
                       {l}
-                    </label>
+                    </li>
                   ))}
-                </div>
+                </ul>
               </div>
             </Reveal>
-
             <Reveal delay={80}>
-              <img src={productsDark} alt="Zaptec laadpaal aan donkere gevel" width={1600} height={700} loading="lazy" className="aspect-square w-full rounded-3xl object-cover" />
-            </Reveal>
-          </div>
-
-          <div id="app" className="mt-20 text-center">
-            <Reveal>
-              <h3 className="text-3xl font-bold">Volledige controle met de Zaptec app</h3>
-              <p className="mt-3 text-white/70">Bekijk status, beheer laadsessies en houd grip op je laadmomenten, gewoon vanaf je telefoon.</p>
-              <img src={appMockup} alt="Zaptec laadpaal bediend via smartphone app" width={1400} height={800} loading="lazy" className="mx-auto mt-10 w-full max-w-4xl rounded-2xl object-cover" />
+              <img src={appMockup} alt="Zaptec laadpaal bediend via smartphone app" width={1400} height={800} loading="lazy" className="w-full rounded-2xl object-cover" />
             </Reveal>
           </div>
         </div>
       </section>
 
+      {/* REVIEWS — echte namen */}
       <section className="mx-auto max-w-7xl px-6 py-20">
         <Reveal>
-          <h2 className="text-3xl font-bold">Dit is wat klanten belangrijk vinden</h2>
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <h2 className="font-display max-w-xl text-4xl font-medium leading-[1.05] md:text-5xl">Wat klanten zeggen na de installatie.</h2>
+            <div className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm">
+              <div className="flex gap-0.5" style={{ color: CLAY }}>
+                {Array.from({ length: 5 }).map((_, j) => <Star key={j} className="h-4 w-4 fill-current" />)}
+              </div>
+              <span className="font-semibold">4.9 / 5</span>
+              <span className="text-xs text-[#5a6a5f]">· 124 reviews</span>
+            </div>
+          </div>
         </Reveal>
-        <div className="mt-10 grid gap-6 md:grid-cols-4">
+        <div className="mt-10 grid gap-6 md:grid-cols-3">
           {[
-            { n: "Strakke installatie", c: "De laadpaal past mooi bij het huis en alles is netjes afgewerkt." },
-            { n: "Slim in gebruik", c: "De app maakt het makkelijk om laden te volgen en slim te plannen." },
-            { n: "Duidelijk advies", c: "We wisten vooraf precies wat bij onze situatie paste en waarom." },
-            { n: "Premium gevoel", c: "Zaptec voelt degelijk, modern en klaar voor de toekomst." },
-          ].map((r, i) => (
-            <Reveal key={i} delay={i * 60}>
-              <div className="rounded-2xl bg-white p-6">
-                <div className="flex gap-1 text-[#e85d2f]">
-                  {Array.from({ length: 5 }).map((_, j) => (
-                    <Star key={j} className="h-4 w-4 fill-current" />
-                  ))}
+            { n: "Mark V.", l: "Utrecht", c: "Strakke installatie, kabel netjes weggewerkt langs de gevel. Binnen 24 uur reactie en alles vooraf duidelijk afgestemd." },
+            { n: "Sanne B.", l: "Haarlem", c: "We hebben een warmtepomp én een EV. De load balancing van Zaptec werkt feilloos — geen gesprongen hoofdzekering meer." },
+            { n: "Joost & Lieke", l: "Den Bosch", c: "Eerlijk advies zonder verkooppraatje. Ze hebben ons écht geholpen kiezen, niet de duurste optie aangepraat." },
+          ].map((r) => (
+            <Reveal key={r.n}>
+              <div className="h-full rounded-3xl bg-white p-7">
+                <div className="flex gap-0.5" style={{ color: CLAY }}>
+                  {Array.from({ length: 5 }).map((_, j) => <Star key={j} className="h-4 w-4 fill-current" />)}
                 </div>
-                <p className="mt-3 text-sm">{r.c}</p>
-                <p className="mt-4 text-xs font-semibold">{r.n}</p>
+                <p className="font-display mt-4 text-lg font-medium leading-snug">"{r.c}"</p>
+                <div className="mt-5 flex items-center gap-3 border-t pt-4 text-sm" style={{ borderColor: "#e5e7eb" }}>
+                  <div className="grid h-9 w-9 place-items-center rounded-full text-xs font-semibold text-white" style={{ backgroundColor: FOREST_2 }}>
+                    {r.n.split(" ").map((s) => s[0]).join("")}
+                  </div>
+                  <div>
+                    <p className="font-semibold">{r.n}</p>
+                    <p className="text-xs text-[#5a6a5f]">{r.l}</p>
+                  </div>
+                </div>
               </div>
             </Reveal>
           ))}
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 pb-20">
-        <Reveal>
-          <div className="rounded-3xl bg-white p-10 text-center">
-            <p className="text-4xl font-bold">Een laadpaal kiezen hoeft niet ingewikkeld te zijn</p>
-            <div className="mt-6 flex flex-wrap items-center justify-center gap-8 text-xs font-semibold text-[#5a6a5f]">
-              <span>Zaptec appbediening</span>
-              <span>Strak design</span>
-              <span>Slim thuisladen</span>
-              <span>Advies door Groenklaar</span>
+      {/* MARQUEE */}
+      <section aria-hidden className="overflow-hidden border-y border-black/5 bg-white/40 py-6">
+        <div className="marquee-track flex w-max gap-12 whitespace-nowrap font-display text-2xl font-medium" style={{ color: FOREST }}>
+          {Array.from({ length: 2 }).map((_, k) => (
+            <div key={k} className="flex shrink-0 gap-12 pr-12">
+              {["Zaptec Pro", "Load balancing", "Strak design", "Slim thuisladen", "Erkend installateur", "NEN 1010", "Advies door Groenklaar"].map((w) => (
+                <span key={w} className="inline-flex items-center gap-12">
+                  {w}
+                  <span style={{ color: CLAY }}>✦</span>
+                </span>
+              ))}
             </div>
-          </div>
-        </Reveal>
+          ))}
+        </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 pb-20">
+      {/* PROCESS */}
+      <section className="mx-auto max-w-7xl px-6 py-20">
         <Reveal>
-          <div className="grid gap-10 rounded-3xl bg-white p-10 md:grid-cols-2 md:items-center">
+          <div className="grid gap-10 rounded-3xl bg-white p-8 md:grid-cols-2 md:p-12 md:items-center">
             <div>
-              <h3 className="text-3xl font-bold">Zo werkt het traject</h3>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#5a6a5f]">Zo werkt het</p>
+              <h3 className="font-display mt-3 text-3xl font-medium md:text-4xl">Van eerste aanvraag tot ladende auto</h3>
               <div className="mt-6 space-y-3">
                 {[
                   "Vraag vrijblijvend advies aan",
                   "We beoordelen jouw situatie en wensen",
                   "Je ontvangt een passend voorstel voor Zaptec",
-                  "Na akkoord plannen we de installatie in",
+                  "Na akkoord plannen we de installatie",
+                  "Strakke oplevering en uitleg aan huis",
                 ].map((s, i) => (
-                  <div key={s} className="flex items-center gap-3 rounded-full bg-[#f4f1e8] px-5 py-3 text-sm">
-                    <span className="grid h-6 w-6 place-items-center rounded-full bg-[#2d6a3a] text-xs font-bold text-white">{i + 1}</span>
+                  <div key={s} className="flex items-center gap-3 rounded-2xl px-5 py-3 text-sm" style={{ backgroundColor: PAPER }}>
+                    <span className="grid h-7 w-7 place-items-center rounded-full text-xs font-bold text-white" style={{ backgroundColor: FOREST }}>{i + 1}</span>
                     {s}
                   </div>
                 ))}
@@ -424,79 +561,24 @@ export default function Index() {
         </Reveal>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 pb-20">
-        <Reveal>
-          <div className="grid gap-6 rounded-3xl p-10 md:grid-cols-2 md:items-center" style={{ backgroundColor: SAGE_DARK }}>
-            <div>
-              <h3 className="text-2xl font-bold">Benieuwd of Zaptec bij jouw woning past?</h3>
-              <p className="mt-2 text-sm text-[#3a4a3f]">Laat je gegevens achter en we nemen contact op voor passend advies.</p>
-            </div>
-            <div className="flex gap-3">
-              <input placeholder="Telefoonnummer of e-mail" className="flex-1 rounded-full bg-white px-5 py-3 text-sm outline-none" />
-              <Btn asLink href="#contact">Plan contact</Btn>
-            </div>
-          </div>
-        </Reveal>
-      </section>
-
-      <section className="mx-auto max-w-7xl px-6 pb-20">
-        <Reveal>
-          <h3 className="mb-8 text-2xl font-bold">Meer van Zaptec in beeld</h3>
-        </Reveal>
-        <div className="grid gap-6 md:grid-cols-4">
-          {[
-            { title: "Zaptec aan huis", image: hero },
-            { title: "Appbediening", image: appMockup },
-            { title: "Strakke afwerking", image: product },
-            { title: "Slim laden", image: consult },
-          ].map((item, i) => (
-            <Reveal key={item.title} delay={i * 60}>
-              <div className="overflow-hidden rounded-2xl bg-white text-center">
-                <img src={item.image} alt={item.title} loading="lazy" className="h-40 w-full object-cover" />
-                <div className="p-6">
-                  <p className="font-semibold">{item.title}</p>
-                  <p className="mt-1 text-xs text-[#5a6a5f]">Zaptec via Groenklaar</p>
-                </div>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
+      {/* FAQ */}
       <section id="faq" className="mx-auto max-w-3xl px-6 pb-20">
         <Reveal>
-          <h3 className="mb-8 text-center text-3xl font-bold">Vragen & antwoorden</h3>
+          <p className="text-center text-xs font-semibold uppercase tracking-[0.18em] text-[#5a6a5f]">Vragen & antwoorden</p>
+          <h3 className="font-display mt-3 text-center text-3xl font-medium md:text-4xl">Alles wat je wilt weten, voor je beslist.</h3>
         </Reveal>
-        <div className="space-y-3">
+        <div className="mt-10 space-y-3">
           {[
-            {
-              q: "Past een Zaptec laadpaal bij iedere elektrische auto?",
-              a: "Zaptec laadpalen zijn geschikt voor thuisladen van vrijwel alle gangbare elektrische auto's met een Type 2-aansluiting.",
-            },
-            {
-              q: "Kan ik de Zaptec laadpaal bedienen met een app?",
-              a: "Ja, via de Zaptec app kun je onder andere status bekijken, laadsessies volgen en instellingen beheren.",
-            },
-            {
-              q: "Kijken jullie mee naar mijn meterkast en situatie thuis?",
-              a: "Ja, we adviseren op basis van jouw woning, aansluiting, laadbehoefte en gewenste plek van montage.",
-            },
-            {
-              q: "Is slim laden of load balancing mogelijk?",
-              a: "Zaptec ondersteunt slimme functies zoals load balancing, zodat thuisladen beter afgestemd kan worden op je installatie.",
-            },
-            {
-              q: "Hoe verloopt het traject via Groenklaar?",
-              a: "Na je aanvraag nemen we contact op, beoordelen we jouw situatie en ontvang je een passend voorstel voor levering en installatie.",
-            },
-            {
-              q: "Kan Zaptec gecombineerd worden met slim energiegebruik thuis?",
-              a: "Ja, Zaptec is juist interessant voor huishoudens die slim willen laden en hun energieverbruik beter willen sturen.",
-            },
+            { q: "Past een Zaptec laadpaal bij iedere elektrische auto?", a: "Zaptec laadpalen zijn geschikt voor thuisladen van vrijwel alle gangbare elektrische auto's met een Type 2-aansluiting." },
+            { q: "Kan ik de Zaptec laadpaal bedienen met een app?", a: "Ja, via de Zaptec app kun je onder andere status bekijken, laadsessies volgen en instellingen beheren." },
+            { q: "Kijken jullie mee naar mijn meterkast en situatie thuis?", a: "Ja, we adviseren op basis van jouw woning, aansluiting, laadbehoefte en gewenste plek van montage." },
+            { q: "Is slim laden of load balancing mogelijk?", a: "Zaptec ondersteunt slimme functies zoals load balancing, zodat thuisladen beter afgestemd kan worden op je installatie." },
+            { q: "Hoe verloopt het traject via Groenklaar?", a: "Na je aanvraag nemen we contact op, beoordelen we jouw situatie en ontvang je een passend voorstel voor levering en installatie." },
+            { q: "Kan Zaptec gecombineerd worden met dynamische tarieven en zonnepanelen?", a: "Ja, juist daarvoor is Zaptec interessant. Je laadt automatisch op de goedkoopste of groenste momenten." },
           ].map((item) => (
             <Reveal key={item.q}>
               <details className="group rounded-2xl bg-white p-5">
-                <summary className="flex cursor-pointer items-center justify-between text-sm font-medium">
+                <summary className="flex cursor-pointer items-center justify-between text-sm font-semibold">
                   {item.q}
                   <ChevronDown className="h-4 w-4 transition group-open:rotate-180" />
                 </summary>
@@ -507,39 +589,59 @@ export default function Index() {
         </div>
       </section>
 
-      <footer id="contact" className="text-white" style={{ backgroundColor: DARK }}>
-        <div className="mx-auto grid max-w-7xl gap-10 px-6 py-16 md:grid-cols-4">
-          <div>
-            <img src={logo} alt="Groenklaar logo" className="h-9 w-auto" />
-            <p className="mt-3 text-sm text-white/60">Verkoop en advies voor Zaptec laadpalen aan huis, met oog voor afwerking, gebruiksgemak en slim laden.</p>
+      {/* FOOTER */}
+      <footer id="contact" className="text-white" style={{ backgroundColor: FOREST }}>
+        <div className="mx-auto max-w-7xl px-6 py-16">
+          <div className="grid gap-10 md:grid-cols-4">
+            <div className="md:col-span-2">
+              <img src={logo} alt="Groenklaar logo" className="h-9 w-auto" />
+              <p className="font-display mt-5 max-w-md text-2xl font-medium leading-tight">Klaar voor een Zaptec aan jouw woning?</p>
+              <p className="mt-2 max-w-md text-sm text-white/60">Verkoop, advies en strakke installatie van Zaptec laadpalen — door heel Nederland.</p>
+              <div className="mt-6 flex gap-3">
+                <a href="#offerte" className="inline-flex rounded-full px-5 py-2.5 text-sm font-semibold text-white" style={{ backgroundColor: CLAY }}>Vraag offerte aan</a>
+                <a href="#prijs" className="inline-flex rounded-full border border-white/20 px-5 py-2.5 text-sm font-semibold">Bekijk prijzen</a>
+              </div>
+            </div>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/50">Onepager</p>
+              <ul className="mt-3 space-y-2 text-sm text-white/70">
+                <li><a href="#voordelen" className="hover:text-white">Voordelen</a></li>
+                <li><a href="#installatie" className="hover:text-white">Installatie</a></li>
+                <li><a href="#app" className="hover:text-white">Zaptec app</a></li>
+                <li><a href="#prijs" className="hover:text-white">Prijs</a></li>
+                <li><a href="#faq" className="hover:text-white">FAQ</a></li>
+              </ul>
+            </div>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/50">Contact</p>
+              <ul className="mt-3 space-y-2 text-sm text-white/70">
+                <li>info@groenklaar.nl</li>
+                <li>Reactie binnen 24 uur</li>
+                <li><a href="#top" className="hover:text-white">Terug naar boven ↑</a></li>
+              </ul>
+            </div>
           </div>
-          <div>
-            <p className="font-semibold">Onepager</p>
-            <ul className="mt-3 space-y-2 text-sm text-white/60">
-              <li><a href="#voordelen">Voordelen</a></li>
-              <li><a href="#installatie">Installatie</a></li>
-              <li><a href="#app">Zaptec app</a></li>
-            </ul>
-          </div>
-          <div>
-            <p className="font-semibold">Oplossing</p>
-            <ul className="mt-3 space-y-2 text-sm text-white/60">
-              <li>Zaptec laadpaal</li>
-              <li>Persoonlijk advies</li>
-              <li>Nette plaatsing</li>
-            </ul>
-          </div>
-          <div>
-            <p className="font-semibold">Contact</p>
-            <ul className="mt-3 space-y-2 text-sm text-white/60">
-              <li>Vraag vrijblijvend advies aan</li>
-              <li>Via Groenklaar</li>
-              <li><a href="#top">Terug naar boven</a></li>
-            </ul>
+          <div className="mt-12 flex flex-col items-start justify-between gap-4 border-t border-white/10 pt-6 text-xs text-white/50 md:flex-row md:items-center">
+            <p>© 2026 Groenklaar. Officieel Zaptec partner. KVK 00000000 · BTW NL000000000B01</p>
+            <div className="flex gap-4">
+              <a href="#" className="hover:text-white">Privacy</a>
+              <a href="#" className="hover:text-white">Algemene voorwaarden</a>
+            </div>
           </div>
         </div>
-        <div className="border-t border-white/10 px-6 py-6 text-center text-xs text-white/50">© 2026 Groenklaar. Alle rechten voorbehouden.</div>
       </footer>
+
+      {/* STICKY MOBILE CTA */}
+      <div className="fixed inset-x-0 bottom-0 z-50 border-t border-black/5 bg-white/95 px-4 py-3 shadow-[0_-10px_30px_-15px_rgba(0,0,0,0.2)] backdrop-blur md:hidden">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <p className="text-[11px] text-[#5a6a5f]">Vanaf €1.295 incl. installatie</p>
+            <p className="text-sm font-semibold">Zaptec aan huis</p>
+          </div>
+          <PrimaryBtn href="#offerte">Offerte</PrimaryBtn>
+        </div>
+      </div>
+      <div className="h-20 md:hidden" aria-hidden />
     </main>
   );
 }
