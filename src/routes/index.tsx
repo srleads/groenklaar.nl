@@ -169,18 +169,7 @@ export default function Index() {
                   className="aspect-[9/10] w-full object-cover"
                 />
               </div>
-              {/* Floating spec card */}
-              <div className="absolute -left-4 bottom-6 hidden rounded-2xl bg-white p-4 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.25)] md:block">
-                <div className="flex items-center gap-3">
-                  <div className="grid h-10 w-10 place-items-center rounded-full" style={{ backgroundColor: FOREST }}>
-                    <Zap className="h-4 w-4 text-white" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-[#5a6a5f]">Zaptec Pro / Go</p>
-                    <p className="text-sm font-semibold">22 kW · Type 2 · IP54</p>
-                  </div>
-                </div>
-              </div>
+              {/* Badge */}
               <div className="absolute right-4 top-4 rounded-full px-3 py-1.5 text-[11px] font-semibold text-white" style={{ backgroundColor: FOREST }}>
                 Officieel Zaptec partner
               </div>
