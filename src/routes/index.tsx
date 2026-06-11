@@ -145,8 +145,8 @@ export default function Index() {
                 Zaptec laadpaal aan huis — advies, levering en strakke installatie door Groenklaar. Slim laden, load balancing en volledige controle via de Zaptec app.
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
-                <PrimaryBtn href="#offerte">Check mijn meterkast gratis</PrimaryBtn>
-                <GhostBtn href="#prijs">Bekijk vanaf-prijs</GhostBtn>
+                <PrimaryBtn href="#offerte">Vraag gratis offerte aan</PrimaryBtn>
+                <GhostBtn href="#voordelen">Bekijk voordelen</GhostBtn>
               </div>
               <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-[#3a4a3f]">
                 <span className="inline-flex items-center gap-1.5"><Check className="h-3.5 w-3.5" style={{ color: FOREST_2 }} /> Reactie binnen 24 uur</span>
