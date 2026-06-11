@@ -72,6 +72,201 @@ function Reveal({ children, className = "", delay = 0 }: { children: ReactNode; 
   );
 }
 
+type FormData = {
+  auto: string;
+  aansluiting: string;
+  locatie: string;
+  termijn: string;
+  naam: string;
+  email: string;
+  telefoon: string;
+  postcode: string;
+};
+
+const steps: Array<{
+  key: keyof FormData;
+  q: string;
+  options: string[];
+}> = [
+  { key: "auto", q: "Wat voor auto laad je (of ga je laden)?", options: ["Volledig elektrisch (EV)", "Plug-in hybride (PHEV)", "Twee of meer auto's", "Weet ik nog niet"] },
+  { key: "aansluiting", q: "Wat voor stroomaansluiting heb je thuis?", options: ["1-fase (gewoon)", "3-fase (krachtstroom)", "Weet ik niet"] },
+  { key: "locatie", q: "Waar moet de laadpaal komen?", options: ["Aan de gevel", "In de garage", "Op een paal / carport", "Anders / onbekend"] },
+  { key: "termijn", q: "Wanneer wil je het laten installeren?", options: ["Zo snel mogelijk", "Binnen 1 maand", "1 – 3 maanden", "Ik oriënteer me nog"] },
+];
+
+function encodeForm(data: Record<string, string>) {
+  return Object.entries(data)
+    .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
+    .join("&");
+}
+
+function MultiStepForm() {
+  const [step, setStep] = useState(0);
+  const [data, setData] = useState<FormData>({
+    auto: "",
+    aansluiting: "",
+    locatie: "",
+    termijn: "",
+    naam: "",
+    email: "",
+    telefoon: "",
+    postcode: "",
+  });
+  const [submitting, setSubmitting] = useState(false);
+  const [done, setDone] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const total = steps.length + 1; // +1 = contact step
+  const isContact = step === steps.length;
+  const progress = ((step + (isContact ? 1 : 0)) / total) * 100;
+
+  function choose(key: keyof FormData, value: string) {
+    setData((d) => ({ ...d, [key]: value }));
+    setTimeout(() => setStep((s) => s + 1), 120);
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!data.email || !data.telefoon || !data.naam) {
+      setError("Vul je naam, e-mail en telefoonnummer in.");
+      return;
+    }
+    setSubmitting(true);
+    setError(null);
+    try {
+      const body = encodeForm({ "form-name": "offerte", ...data });
+      const res = await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body,
+      });
+      if (!res.ok) throw new Error("submit-failed");
+      setDone(true);
+    } catch {
+      setError("Er ging iets mis. Probeer het opnieuw of mail ons direct.");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  if (done) {
+    return (
+      <div className="rounded-3xl bg-white p-8 text-center">
+        <div className="mx-auto grid h-12 w-12 place-items-center rounded-full" style={{ backgroundColor: SAGE_DARK }}>
+          <Check className="h-6 w-6" style={{ color: FOREST }} />
+        </div>
+        <h4 className="font-display mt-4 text-2xl font-medium">Bedankt — we nemen binnen 24 uur contact op.</h4>
+        <p className="mt-2 text-sm text-[#5a6a5f]">Je aanvraag is verzonden. Houd je telefoon en mailbox in de gaten.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <div className="mb-4 flex items-center justify-between text-xs text-[#5a6a5f]">
+        <span>Stap {Math.min(step + 1, total)} van {total}</span>
+        <span>{Math.round(progress)}%</span>
+      </div>
+      <div className="mb-6 h-1.5 w-full overflow-hidden rounded-full bg-black/5">
+        <div className="h-full rounded-full transition-all" style={{ width: `${progress}%`, backgroundColor: FOREST }} />
+      </div>
+
+      {!isContact ? (
+        <div>
+          <p className="font-display text-xl font-medium md:text-2xl">{steps[step].q}</p>
+          <div className="mt-5 grid gap-2.5 sm:grid-cols-2">
+            {steps[step].options.map((opt) => {
+              const active = data[steps[step].key] === opt;
+              return (
+                <button
+                  type="button"
+                  key={opt}
+                  onClick={() => choose(steps[step].key, opt)}
+                  className="rounded-2xl border-2 bg-white px-4 py-3 text-left text-sm font-medium transition hover:-translate-y-0.5"
+                  style={{ borderColor: active ? FOREST : "rgba(0,0,0,0.08)", backgroundColor: active ? SAGE_DARK : "#fff" }}
+                >
+                  {opt}
+                </button>
+              );
+            })}
+          </div>
+          {step > 0 ? (
+            <button type="button" onClick={() => setStep((s) => s - 1)} className="mt-5 text-xs font-medium text-[#5a6a5f] underline-offset-4 hover:underline">
+              ← Vorige
+            </button>
+          ) : null}
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} name="offerte" data-netlify="true" className="space-y-3">
+          <input type="hidden" name="form-name" value="offerte" />
+          <input type="hidden" name="auto" value={data.auto} />
+          <input type="hidden" name="aansluiting" value={data.aansluiting} />
+          <input type="hidden" name="locatie" value={data.locatie} />
+          <input type="hidden" name="termijn" value={data.termijn} />
+          <p className="font-display text-xl font-medium md:text-2xl">Laatste stap — waar mogen we je bereiken?</p>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <input
+              type="text"
+              name="naam"
+              required
+              placeholder="Je naam"
+              value={data.naam}
+              onChange={(e) => setData({ ...data, naam: e.target.value })}
+              className="rounded-2xl border-2 bg-white px-4 py-3 text-sm outline-none"
+              style={{ borderColor: "rgba(0,0,0,0.08)" }}
+            />
+            <input
+              type="text"
+              name="postcode"
+              placeholder="Postcode (optioneel)"
+              value={data.postcode}
+              onChange={(e) => setData({ ...data, postcode: e.target.value })}
+              className="rounded-2xl border-2 bg-white px-4 py-3 text-sm outline-none"
+              style={{ borderColor: "rgba(0,0,0,0.08)" }}
+            />
+            <input
+              type="email"
+              name="email"
+              required
+              placeholder="E-mailadres"
+              value={data.email}
+              onChange={(e) => setData({ ...data, email: e.target.value })}
+              className="rounded-2xl border-2 bg-white px-4 py-3 text-sm outline-none"
+              style={{ borderColor: "rgba(0,0,0,0.08)" }}
+            />
+            <input
+              type="tel"
+              name="telefoon"
+              required
+              placeholder="Telefoonnummer"
+              value={data.telefoon}
+              onChange={(e) => setData({ ...data, telefoon: e.target.value })}
+              className="rounded-2xl border-2 bg-white px-4 py-3 text-sm outline-none"
+              style={{ borderColor: "rgba(0,0,0,0.08)" }}
+            />
+          </div>
+          {error ? <p className="text-xs font-medium text-red-600">{error}</p> : null}
+          <div className="flex items-center justify-between pt-2">
+            <button type="button" onClick={() => setStep((s) => s - 1)} className="text-xs font-medium text-[#5a6a5f] underline-offset-4 hover:underline">
+              ← Vorige
+            </button>
+            <button
+              type="submit"
+              disabled={submitting}
+              className="group inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90 disabled:opacity-60"
+              style={{ backgroundColor: FOREST }}
+            >
+              {submitting ? "Versturen..." : "Verstuur aanvraag"}
+              <span className="grid h-6 w-6 place-items-center rounded-full text-[10px]" style={{ backgroundColor: CLAY }}>→</span>
+            </button>
+          </div>
+          <p className="text-[11px] text-[#5a6a5f]">We bellen of mailen binnen 24 uur — geen verkooppraat, alleen passend advies.</p>
+        </form>
+      )}
+    </div>
+  );
+}
+
 const navItems = [
   { label: "Voordelen", href: "#voordelen" },
   { label: "Installatie", href: "#installatie" },
@@ -145,8 +340,8 @@ export default function Index() {
                 Zaptec laadpaal aan huis — advies, levering en strakke installatie door Groenklaar. Slim laden, load balancing en volledige controle via de Zaptec app.
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
-                <PrimaryBtn href="#offerte">Check mijn meterkast gratis</PrimaryBtn>
-                <GhostBtn href="#prijs">Bekijk vanaf-prijs</GhostBtn>
+                <PrimaryBtn href="#offerte">Vraag gratis offerte aan</PrimaryBtn>
+                <GhostBtn href="#voordelen">Bekijk voordelen</GhostBtn>
               </div>
               <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-[#3a4a3f]">
                 <span className="inline-flex items-center gap-1.5"><Check className="h-3.5 w-3.5" style={{ color: FOREST_2 }} /> Reactie binnen 24 uur</span>
@@ -400,21 +595,16 @@ export default function Index() {
       {/* HUIS-MATCH */}
       <section className="mx-auto max-w-7xl px-6 pb-20">
         <Reveal>
-          <div className="grid items-center gap-10 rounded-3xl bg-white p-8 md:grid-cols-2 md:p-12">
-            <div>
-              <h3 className="font-display text-3xl font-medium md:text-4xl">Past Zaptec bij jouw woning?</h3>
-              <p className="mt-3 text-[#5a6a5f]">We helpen je kiezen op basis van vermogen, meterkast, kabelroute en hoe jij je auto thuis gebruikt.</p>
-              <form id="offerte" name="offerte" data-netlify="true" className="mt-6 flex max-w-md rounded-full border bg-white p-2" style={{ borderColor: FOREST }}>
-                <input type="hidden" name="form-name" value="offerte" />
-                <input name="contact" type="text" placeholder="Postcode of telefoonnummer" className="flex-1 bg-transparent px-4 py-2 text-sm outline-none" required />
-                <button type="submit" className="group inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90" style={{ backgroundColor: FOREST }}>
-                  Check mijn woning
-                  <span className="grid h-6 w-6 place-items-center rounded-full text-[10px] transition group-hover:translate-x-0.5" style={{ backgroundColor: CLAY }}>→</span>
-                </button>
-              </form>
-              <p className="mt-3 text-xs text-[#5a6a5f]">We bellen of mailen binnen 24 uur — geen verkooppraat, alleen passend advies.</p>
+          <div id="offerte" className="grid items-stretch gap-10 rounded-3xl bg-white p-8 md:grid-cols-2 md:p-12">
+            <div className="flex flex-col justify-center">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#5a6a5f]">Offerte op maat</p>
+              <h3 className="font-display mt-3 text-3xl font-medium md:text-4xl">In 4 korte stappen weten we precies wat past.</h3>
+              <p className="mt-3 text-[#5a6a5f]">Geen lange formulieren — gewoon klikken. Aan het eind laat je je gegevens achter.</p>
+              <img src={house} alt="Zaptec laadpaal naast een Nederlandse woninggevel" width={1000} height={700} loading="lazy" className="mt-6 hidden w-full rounded-2xl object-contain md:block" />
             </div>
-            <img src={house} alt="Zaptec laadpaal naast een Nederlandse woninggevel" width={1000} height={700} loading="lazy" className="w-full rounded-2xl object-contain" />
+            <div className="rounded-3xl p-6 md:p-8" style={{ backgroundColor: PAPER }}>
+              <MultiStepForm />
+            </div>
           </div>
         </Reveal>
       </section>

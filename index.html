@@ -31,6 +31,17 @@
   </head>
   <body>
     <div id="root"></div>
+    <!-- Hidden form for Netlify build-time detection -->
+    <form name="offerte" data-netlify="true" hidden>
+      <input type="text" name="auto" />
+      <input type="text" name="aansluiting" />
+      <input type="text" name="locatie" />
+      <input type="text" name="termijn" />
+      <input type="text" name="naam" />
+      <input type="email" name="email" />
+      <input type="tel" name="telefoon" />
+      <input type="text" name="postcode" />
+    </form>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
