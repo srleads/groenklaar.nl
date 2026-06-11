@@ -404,10 +404,13 @@ export default function Index() {
             <div>
               <h3 className="font-display text-3xl font-medium md:text-4xl">Past Zaptec bij jouw woning?</h3>
               <p className="mt-3 text-[#5a6a5f]">We helpen je kiezen op basis van vermogen, meterkast, kabelroute en hoe jij je auto thuis gebruikt.</p>
-              <div id="offerte" className="mt-6 flex max-w-md rounded-full border bg-white p-2" style={{ borderColor: FOREST }}>
-                <input placeholder="Postcode of telefoonnummer" className="flex-1 bg-transparent px-4 py-2 text-sm outline-none" />
-                <PrimaryBtn href="#contact">Check mijn woning</PrimaryBtn>
-              </div>
+              <form name="offerte" netlify className="mt-6 flex max-w-md rounded-full border bg-white p-2" style={{ borderColor: FOREST }}>
+                <input name="contact" type="text" placeholder="Postcode of telefoonnummer" className="flex-1 bg-transparent px-4 py-2 text-sm outline-none" required />
+                <button type="submit" className="group inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90" style={{ backgroundColor: FOREST }}>
+                  Check mijn woning
+                  <span className="grid h-6 w-6 place-items-center rounded-full text-[10px] transition group-hover:translate-x-0.5" style={{ backgroundColor: CLAY }}>→</span>
+                </button>
+              </form>
               <p className="mt-3 text-xs text-[#5a6a5f]">We bellen of mailen binnen 24 uur — geen verkooppraat, alleen passend advies.</p>
             </div>
             <img src={house} alt="Zaptec laadpaal naast een Nederlandse woninggevel" width={1000} height={700} loading="lazy" className="w-full rounded-2xl object-contain" />
