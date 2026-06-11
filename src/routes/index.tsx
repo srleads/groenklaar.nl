@@ -404,7 +404,8 @@ export default function Index() {
             <div>
               <h3 className="font-display text-3xl font-medium md:text-4xl">Past Zaptec bij jouw woning?</h3>
               <p className="mt-3 text-[#5a6a5f]">We helpen je kiezen op basis van vermogen, meterkast, kabelroute en hoe jij je auto thuis gebruikt.</p>
-              <form name="offerte" netlify className="mt-6 flex max-w-md rounded-full border bg-white p-2" style={{ borderColor: FOREST }}>
+              <form name="offerte" data-netlify="true" className="mt-6 flex max-w-md rounded-full border bg-white p-2" style={{ borderColor: FOREST }}>
+                <input type="hidden" name="form-name" value="offerte" />
                 <input name="contact" type="text" placeholder="Postcode of telefoonnummer" className="flex-1 bg-transparent px-4 py-2 text-sm outline-none" required />
                 <button type="submit" className="group inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90" style={{ backgroundColor: FOREST }}>
                   Check mijn woning
