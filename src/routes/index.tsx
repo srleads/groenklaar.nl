@@ -775,7 +775,7 @@ export default function Index() {
         <div className="mx-auto max-w-7xl px-6 py-16">
           <div className="grid gap-10 md:grid-cols-4">
             <div className="md:col-span-2">
-              <img src={logo} alt="Groenklaar logo" className="h-9 w-auto" />
+              <img src={logo} alt="Groenklaar logo" className="h-9 w-auto" style={{ filter: "brightness(0) invert(1)" }} />
               <p className="font-display mt-5 max-w-md text-2xl font-medium leading-tight">Klaar voor een Zaptec aan jouw woning?</p>
               <p className="mt-2 max-w-md text-sm text-white/60">Verkoop, advies en strakke installatie van Zaptec laadpalen, door heel Nederland.</p>
               <div className="mt-6 flex gap-3">
@@ -803,7 +803,7 @@ export default function Index() {
             </div>
           </div>
           <div className="mt-12 flex flex-col items-start justify-between gap-4 border-t border-white/10 pt-6 text-xs text-white/50 md:flex-row md:items-center">
-            <p>© 2026 Groenklaar. Officieel Zaptec partner. KVK 00000000 · BTW NL000000000B01</p>
+            <p>© 2026 Groenklaar. Alle rechten voorbehouden.</p>
             <div className="flex gap-4">
               <a href="#" className="hover:text-white">Privacy</a>
               <a href="#" className="hover:text-white">Algemene voorwaarden</a>
