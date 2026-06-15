@@ -9,6 +9,9 @@ import house from "@/assets/zaptec-house.png";
 import productsDark from "@/assets/zaptec-dark.png";
 import appMockup from "@/assets/zaptec-app.png";
 import family from "@/assets/zaptec-process.png";
+import featSmart from "@/assets/feature-smart-charging.jpg";
+import featFacade from "@/assets/feature-facade-design.jpg";
+import featUpdates from "@/assets/feature-updates.jpg";
 
 // Palette: sage canvas, deep forest as primary, warm clay only as accent
 const SAGE = "#e6ebdb";
