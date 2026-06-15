@@ -333,7 +333,7 @@ export default function Index() {
                 <span className="grid h-4 w-4 place-items-center rounded-full" style={{ backgroundColor: FOREST_2 }}>
                   <span className="pulse-dot block h-1.5 w-1.5 rounded-full bg-white" />
                 </span>
-                Erkend Zaptec installateur · 4.9/5 op 124 reviews
+                Erkend Zaptec installateur
               </div>
               <h1 className="font-display text-[clamp(2.6rem,6vw,4.4rem)] font-medium leading-[1.02]">
                 Premium thuisladen,<br />
@@ -366,10 +366,6 @@ export default function Index() {
                   decoding="async"
                   className="aspect-[9/10] w-full object-cover"
                 />
-              </div>
-              {/* Badge */}
-              <div className="absolute right-4 top-4 rounded-full px-3 py-1.5 text-[11px] font-semibold text-white" style={{ backgroundColor: FOREST }}>
-                Officieel Zaptec partner
               </div>
             </div>
           </Reveal>
