@@ -6,7 +6,6 @@ import driveway from "@/assets/zaptec-driveway.png";
 import consult from "@/assets/zaptec-install.png";
 import product from "@/assets/zaptec-product.jpg";
 import house from "@/assets/zaptec-house.png";
-import productsDark from "@/assets/zaptec-dark.png";
 import appMockup from "@/assets/zaptec-app.png";
 import family from "@/assets/zaptec-process.png";
 import featSmart from "@/assets/feature-smart-charging.jpg";
