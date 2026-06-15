@@ -6,9 +6,11 @@ import driveway from "@/assets/zaptec-driveway.png";
 import consult from "@/assets/zaptec-install.png";
 import product from "@/assets/zaptec-product.jpg";
 import house from "@/assets/zaptec-house.png";
-import productsDark from "@/assets/zaptec-dark.png";
 import appMockup from "@/assets/zaptec-app.png";
 import family from "@/assets/zaptec-process.png";
+import featSmart from "@/assets/feature-smart-charging.jpg";
+import featFacade from "@/assets/feature-facade-design.jpg";
+import featUpdates from "@/assets/feature-updates.jpg";
 
 // Palette: sage canvas, deep forest as primary, warm clay only as accent
 const SAGE = "#e6ebdb";
@@ -155,7 +157,7 @@ function MultiStepForm() {
         <div className="mx-auto grid h-12 w-12 place-items-center rounded-full" style={{ backgroundColor: SAGE_DARK }}>
           <Check className="h-6 w-6" style={{ color: FOREST }} />
         </div>
-        <h4 className="font-display mt-4 text-2xl font-medium">Bedankt — we nemen binnen 24 uur contact op.</h4>
+        <h4 className="font-display mt-4 text-2xl font-medium">Bedankt, we nemen binnen 24 uur contact op.</h4>
         <p className="mt-2 text-sm text-[#5a6a5f]">Je aanvraag is verzonden. Houd je telefoon en mailbox in de gaten.</p>
       </div>
     );
@@ -203,7 +205,7 @@ function MultiStepForm() {
           <input type="hidden" name="aansluiting" value={data.aansluiting} />
           <input type="hidden" name="locatie" value={data.locatie} />
           <input type="hidden" name="termijn" value={data.termijn} />
-          <p className="font-display text-xl font-medium md:text-2xl">Laatste stap — waar mogen we je bereiken?</p>
+          <p className="font-display text-xl font-medium md:text-2xl">Laatste stap, waar mogen we je bereiken?</p>
           <div className="grid gap-3 sm:grid-cols-2">
             <input
               type="text"
@@ -260,7 +262,7 @@ function MultiStepForm() {
               <span className="grid h-6 w-6 place-items-center rounded-full text-[10px]" style={{ backgroundColor: CLAY }}>→</span>
             </button>
           </div>
-          <p className="text-[11px] text-[#5a6a5f]">We bellen of mailen binnen 24 uur — geen verkooppraat, alleen passend advies.</p>
+          <p className="text-[11px] text-[#5a6a5f]">We bellen of mailen binnen 24 uur, geen verkooppraat, alleen passend advies.</p>
         </form>
       )}
     </div>
@@ -284,7 +286,7 @@ export default function Index() {
       <nav className="sticky top-0 z-40 backdrop-blur" style={{ backgroundColor: `${SAGE}cc` }}>
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <a href="#top" className="flex items-center gap-3">
-            <img src={logo} alt="Groenklaar — Zaptec installateur" className="h-8 w-auto md:h-9" />
+            <img src={logo} alt="Groenklaar, Zaptec installateur" className="h-8 w-auto md:h-9" />
           </a>
           <ul className="hidden gap-8 text-sm font-medium md:flex">
             {navItems.map((item) => (
@@ -321,7 +323,7 @@ export default function Index() {
         ) : null}
       </nav>
 
-      {/* HERO — asymmetric editorial */}
+      {/* HERO, asymmetric editorial */}
       <section id="top" className="relative mx-auto max-w-7xl px-6 pb-20 pt-10 md:pt-16">
         <div className="grid items-center gap-10 md:grid-cols-[1.05fr_1fr]">
           <Reveal>
@@ -330,14 +332,14 @@ export default function Index() {
                 <span className="grid h-4 w-4 place-items-center rounded-full" style={{ backgroundColor: FOREST_2 }}>
                   <span className="pulse-dot block h-1.5 w-1.5 rounded-full bg-white" />
                 </span>
-                Erkend Zaptec installateur · 4.9/5 op 124 reviews
+                Erkend Zaptec installateur
               </div>
               <h1 className="font-display text-[clamp(2.6rem,6vw,4.4rem)] font-medium leading-[1.02]">
                 Premium thuisladen,<br />
                 <em className="not-italic" style={{ color: CLAY }}>Scandinavisch</em> uitgevoerd.
               </h1>
               <p className="mt-6 max-w-md text-base text-[#3a4a3f] md:text-lg">
-                Zaptec laadpaal aan huis — advies, levering en strakke installatie door Groenklaar. Slim laden, load balancing en volledige controle via de Zaptec app.
+                Zaptec laadpaal aan huis, advies, levering en strakke installatie door Groenklaar. Slim laden, load balancing en volledige controle via de Zaptec app.
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <PrimaryBtn href="#offerte">Vraag gratis offerte aan</PrimaryBtn>
@@ -363,10 +365,6 @@ export default function Index() {
                   decoding="async"
                   className="aspect-[9/10] w-full object-cover"
                 />
-              </div>
-              {/* Badge */}
-              <div className="absolute right-4 top-4 rounded-full px-3 py-1.5 text-[11px] font-semibold text-white" style={{ backgroundColor: FOREST }}>
-                Officieel Zaptec partner
               </div>
             </div>
           </Reveal>
@@ -436,7 +434,7 @@ export default function Index() {
         <Reveal>
           <div className="grid items-end gap-6 md:grid-cols-[1fr_auto]">
             <h2 className="font-display max-w-2xl text-4xl font-medium leading-[1.05] md:text-5xl">
-              Gebouwd voor slim thuisladen — vandaag én over vijf jaar.
+              Gebouwd voor slim thuisladen, vandaag én over vijf jaar.
             </h2>
             <p className="max-w-xs text-sm text-[#5a6a5f]">Compact, krachtig en uitbreidbaar wanneer je situatie verandert.</p>
           </div>
@@ -444,7 +442,7 @@ export default function Index() {
         <div className="mt-12 grid gap-6 md:grid-cols-3">
           {[
             { n: "01", t: "Compact, hoog vermogen", d: "Klein van formaat, krachtige laadprestaties tot 22 kW voor dagelijks gebruik." },
-            { n: "02", t: "Altijd up-to-date", d: "Automatische software-updates houden je laadoplossing actueel — zonder losse modules." },
+            { n: "02", t: "Altijd up-to-date", d: "Automatische software-updates houden je laadoplossing actueel, zonder losse modules." },
             { n: "03", t: "Klaar voor groei", d: "Geschikt voor meerdere auto's, dynamische tarieven en slim energiemanagement." },
           ].map((c, i) => (
             <Reveal key={c.n} delay={i * 70}>
@@ -465,7 +463,7 @@ export default function Index() {
             <div className="h-full rounded-3xl bg-white p-8">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#5a6a5f]">Slim energiebeheer</p>
               <h3 className="font-display mt-3 text-3xl font-medium">Nooit meer een gesprongen hoofdzekering</h3>
-              <p className="mt-3 text-sm text-[#5a6a5f]">Load balancing verlaagt automatisch het laadvermogen wanneer jouw vaatwasser, oven of warmtepomp aanslaat — en versnelt weer als er ruimte is.</p>
+              <p className="mt-3 text-sm text-[#5a6a5f]">Load balancing verlaagt automatisch het laadvermogen wanneer jouw vaatwasser, oven of warmtepomp aanslaat, en versnelt weer als er ruimte is.</p>
               <ul className="mt-6 space-y-3 text-sm">
                 {[
                   "Realtime monitoring van je hoofdaansluiting",
@@ -516,7 +514,7 @@ export default function Index() {
               <div className="max-w-md text-white">
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/70">Installatie aan huis</p>
                 <h3 className="font-display mt-3 text-3xl font-medium md:text-4xl">Eén monteur, één afspraak, één strakke oplevering.</h3>
-                <p className="mt-3 text-sm text-white/85">We beoordelen jouw meterkast, kabelroute en gebruik — en leveren een Zaptec-oplossing op die écht past.</p>
+                <p className="mt-3 text-sm text-white/85">We beoordelen jouw meterkast, kabelroute en gebruik, en leveren een Zaptec-oplossing op die écht past.</p>
                 <a className="mt-5 inline-flex rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-[#1c2a23]" href="#offerte">Plan opname-gesprek</a>
               </div>
             </div>
@@ -534,12 +532,12 @@ export default function Index() {
               <p className="mt-3 text-[#5a6a5f]">Geschikt voor thuisladen met focus op gebruiksgemak, slimme software en een nette afwerking aan huis.</p>
               <PrimaryBtn href="#offerte" className="mt-6">Vraag persoonlijk advies</PrimaryBtn>
             </div>
-            <img src={product} alt="Zaptec Pro laadpaal — productfoto" width={800} height={800} loading="lazy" className="mx-auto h-72 w-auto object-contain" />
+            <img src={product} alt="Zaptec Pro laadpaal, productfoto" width={800} height={800} loading="lazy" className="mx-auto h-72 w-auto object-contain" />
           </div>
         </Reveal>
       </section>
 
-      {/* PRIJS — anker */}
+      {/* PRIJS, anker */}
       <section id="prijs" className="mx-auto max-w-7xl px-6 pb-20">
         <Reveal>
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#5a6a5f]">Indicatieve totaalprijs</p>
@@ -599,7 +597,7 @@ export default function Index() {
             <div className="flex flex-col justify-center">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#5a6a5f]">Offerte op maat</p>
               <h3 className="font-display mt-3 text-3xl font-medium md:text-4xl">In 4 korte stappen weten we precies wat past.</h3>
-              <p className="mt-3 text-[#5a6a5f]">Geen lange formulieren — gewoon klikken. Aan het eind laat je je gegevens achter.</p>
+              <p className="mt-3 text-[#5a6a5f]">Geen lange formulieren, gewoon klikken. Aan het eind laat je je gegevens achter.</p>
               <img src={house} alt="Zaptec laadpaal naast een Nederlandse woninggevel" width={1000} height={700} loading="lazy" className="mt-6 hidden w-full rounded-2xl object-contain md:block" />
             </div>
             <div className="rounded-3xl p-6 md:p-8" style={{ backgroundColor: PAPER }}>
@@ -621,13 +619,13 @@ export default function Index() {
 
           <div className="mt-12 grid gap-6 md:grid-cols-3">
             {[
-              { t: "Automatische updates", d: "Nieuwe functies en verbeteringen via software — zonder onnodig gedoe." },
-              { t: "Slim laden op maat", d: "Load balancing en integraties voor efficiënter thuisgebruik." },
-              { t: "Net design aan de gevel", d: "Technisch sterk én visueel mooi aansluitend bij je woning." },
+              { t: "Automatische updates", d: "Nieuwe functies en verbeteringen via software, zonder onnodig gedoe.", img: featUpdates },
+              { t: "Slim laden op maat", d: "Load balancing en integraties voor efficiënter thuisgebruik.", img: featSmart },
+              { t: "Net design aan de gevel", d: "Technisch sterk én visueel mooi aansluitend bij je woning.", img: featFacade },
             ].map((c, i) => (
               <Reveal key={c.t} delay={i * 70}>
                 <div className="overflow-hidden rounded-2xl bg-white/5">
-                  <div className="aspect-[4/3] w-full" style={{ backgroundImage: `url(${productsDark})`, backgroundSize: "cover", backgroundPosition: `${i * 24}% center` }} />
+                  <div className="aspect-[4/3] w-full" style={{ backgroundImage: `url(${c.img})`, backgroundSize: "cover", backgroundPosition: "center" }} />
                   <div className="p-6">
                     <h3 className="font-display text-xl font-medium">{c.t}</h3>
                     <p className="mt-2 text-sm text-white/70">{c.d}</p>
@@ -642,7 +640,7 @@ export default function Index() {
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/60">Zaptec app</p>
                 <h3 className="font-display mt-3 text-3xl font-medium md:text-4xl">Alles in de hand, vanaf de bank.</h3>
-                <p className="mt-3 text-white/70">Bekijk status, beheer laadsessies, plan goedkope nachturen en houd kosten inzichtelijk — gewoon vanaf je telefoon.</p>
+                <p className="mt-3 text-white/70">Bekijk status, beheer laadsessies, plan goedkope nachturen en houd kosten inzichtelijk, gewoon vanaf je telefoon.</p>
                 <ul className="mt-6 space-y-3 text-sm">
                   {["Live laadstatus en historie", "Plan op dynamische tarieven", "Deel laadkosten met huisgenoten", "Ondersteuning voor meerdere auto's"].map((l) => (
                     <li key={l} className="flex items-center gap-3 rounded-full bg-white/5 px-4 py-2.5">
@@ -660,7 +658,7 @@ export default function Index() {
         </div>
       </section>
 
-      {/* REVIEWS — echte namen */}
+      {/* REVIEWS, echte namen */}
       <section className="mx-auto max-w-7xl px-6 py-20">
         <Reveal>
           <div className="flex flex-wrap items-end justify-between gap-4">
@@ -677,7 +675,7 @@ export default function Index() {
         <div className="mt-10 grid gap-6 md:grid-cols-3">
           {[
             { n: "Mark V.", l: "Utrecht", c: "Strakke installatie, kabel netjes weggewerkt langs de gevel. Binnen 24 uur reactie en alles vooraf duidelijk afgestemd." },
-            { n: "Sanne B.", l: "Haarlem", c: "We hebben een warmtepomp én een EV. De load balancing van Zaptec werkt feilloos — geen gesprongen hoofdzekering meer." },
+            { n: "Sanne B.", l: "Haarlem", c: "We hebben een warmtepomp én een EV. De load balancing van Zaptec werkt feilloos, geen gesprongen hoofdzekering meer." },
             { n: "Joost & Lieke", l: "Den Bosch", c: "Eerlijk advies zonder verkooppraatje. Ze hebben ons écht geholpen kiezen, niet de duurste optie aangepraat." },
           ].map((r) => (
             <Reveal key={r.n}>
@@ -777,9 +775,9 @@ export default function Index() {
         <div className="mx-auto max-w-7xl px-6 py-16">
           <div className="grid gap-10 md:grid-cols-4">
             <div className="md:col-span-2">
-              <img src={logo} alt="Groenklaar logo" className="h-9 w-auto" />
+              <img src={logo} alt="Groenklaar logo" className="h-9 w-auto" style={{ filter: "brightness(0) invert(1)" }} />
               <p className="font-display mt-5 max-w-md text-2xl font-medium leading-tight">Klaar voor een Zaptec aan jouw woning?</p>
-              <p className="mt-2 max-w-md text-sm text-white/60">Verkoop, advies en strakke installatie van Zaptec laadpalen — door heel Nederland.</p>
+              <p className="mt-2 max-w-md text-sm text-white/60">Verkoop, advies en strakke installatie van Zaptec laadpalen, door heel Nederland.</p>
               <div className="mt-6 flex gap-3">
                 <a href="#offerte" className="inline-flex rounded-full px-5 py-2.5 text-sm font-semibold text-white" style={{ backgroundColor: CLAY }}>Vraag offerte aan</a>
                 <a href="#prijs" className="inline-flex rounded-full border border-white/20 px-5 py-2.5 text-sm font-semibold">Bekijk prijzen</a>
@@ -805,7 +803,7 @@ export default function Index() {
             </div>
           </div>
           <div className="mt-12 flex flex-col items-start justify-between gap-4 border-t border-white/10 pt-6 text-xs text-white/50 md:flex-row md:items-center">
-            <p>© 2026 Groenklaar. Officieel Zaptec partner. KVK 00000000 · BTW NL000000000B01</p>
+            <p>© 2026 Groenklaar. Alle rechten voorbehouden.</p>
             <div className="flex gap-4">
               <a href="#" className="hover:text-white">Privacy</a>
               <a href="#" className="hover:text-white">Algemene voorwaarden</a>
