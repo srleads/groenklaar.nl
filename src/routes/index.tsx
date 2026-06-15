@@ -620,13 +620,13 @@ export default function Index() {
 
           <div className="mt-12 grid gap-6 md:grid-cols-3">
             {[
-              { t: "Automatische updates", d: "Nieuwe functies en verbeteringen via software, zonder onnodig gedoe." },
-              { t: "Slim laden op maat", d: "Load balancing en integraties voor efficiënter thuisgebruik." },
-              { t: "Net design aan de gevel", d: "Technisch sterk én visueel mooi aansluitend bij je woning." },
+              { t: "Automatische updates", d: "Nieuwe functies en verbeteringen via software, zonder onnodig gedoe.", img: featUpdates },
+              { t: "Slim laden op maat", d: "Load balancing en integraties voor efficiënter thuisgebruik.", img: featSmart },
+              { t: "Net design aan de gevel", d: "Technisch sterk én visueel mooi aansluitend bij je woning.", img: featFacade },
             ].map((c, i) => (
               <Reveal key={c.t} delay={i * 70}>
                 <div className="overflow-hidden rounded-2xl bg-white/5">
-                  <div className="aspect-[4/3] w-full" style={{ backgroundImage: `url(${productsDark})`, backgroundSize: "cover", backgroundPosition: `${i * 24}% center` }} />
+                  <div className="aspect-[4/3] w-full" style={{ backgroundImage: `url(${c.img})`, backgroundSize: "cover", backgroundPosition: "center" }} />
                   <div className="p-6">
                     <h3 className="font-display text-xl font-medium">{c.t}</h3>
                     <p className="mt-2 text-sm text-white/70">{c.d}</p>
